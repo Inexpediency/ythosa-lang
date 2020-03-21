@@ -15,9 +15,8 @@ function parseExpression(program) {
 }
 
 function skipSpace(string) {
-  let first = string.search(/\S/);
-  if (first == -1) return "";
-  return string.slice(first);
+  let skippable = string.match(/^(\s|#.*)*/);
+  return string.slice(skippable[0].length);
 }
 
 function parseApply(expr, program) {
@@ -98,7 +97,7 @@ specialForms.while = (args, scope) => {
     evaluate(args[1], scope);
   }
 
-  // Since undefined does not exist in Egg, we return false,
+  // Since undefined does not exist in bigboilang, we return false,
   // for lack of a meaningful result.
   return false;
 };
@@ -125,6 +124,12 @@ var topScope = Object.create(null);
 topScope.true = true;
 topScope.false = false;
 
+topScope.array = (...values) => values;
+
+topScope.length = array => array.length;
+
+topScope.element = (array, i) => array[i];
+
 for (let op of ["+", "-", "*", "/", "==", "<", ">"]) {
   topScope[op] = Function("a, b", `return a ${op} b;`);
 }
@@ -149,6 +154,22 @@ specialForms.fun = (args, scope) => {
     }
     return expr.name;
   });
+
+specialForms.set = (args, env) => {
+  if (args.length != 2 || args[0].type != "word") {
+    throw new SyntaxError("Bad use of set");
+  }
+  let varName = args[0].name;
+  let value = evaluate(args[1], env);
+
+  for (let scope = env; scope; scope = Object.getPrototypeOf(scope)) {
+    if (Object.prototype.hasOwnProperty.call(scope, varName)) {
+      scope[varName] = value;
+      return value;
+    }
+  }
+  throw new ReferenceError(`Setting undefined variable ${varName}`);
+};
 
   return function() {
     if (arguments.length != params.length) {
