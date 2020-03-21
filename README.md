@@ -1,4 +1,4 @@
-# bigboilanguage
+# YthosaLang
 Programming language for bigbois
 
 ## Released Ver. 1
