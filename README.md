@@ -1,4 +1,4 @@
-<h1 align="center">py-bot-with-nlu</h1>
+<h1 align="center">YthosaLang</h1>
 <div align="center">
   
 ---
@@ -19,7 +19,7 @@
 ---
 
 # Description
--    Lisp on JS
+-    Like Lisp. Written on JS
 -    Description and code will be updated in the future
--    :zzzzzzzzzzzzzzzzzzz:
+-    : zzzzzzzzzzzzzzzzzzz :
 -    ...
